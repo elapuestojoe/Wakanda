@@ -1,0 +1,9 @@
+
+* {
+    cursor: default;
+}
+
+body {
+    -webkit-user-select: none;
+    font: caption;
+}

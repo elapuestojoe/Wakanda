@@ -1,0 +1,37 @@
+{
+  "name": "wakanda",
+  "version": "0.0.1",
+  "description": "An Electron App for visualization and development of neural networks using Keras-Tensorflow-Python",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elapuestojoe/Wakanda.git"
+  },
+  "keywords": [
+    "Electron",
+    "Machine",
+    "Learning",
+    "Deep",
+    "Learning",
+    "Keras",
+    "Tensorflow"
+  ],
+  "author": "Kevin Islas Abud",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/elapuestojoe/Wakanda/issues"
+  },
+  "homepage": "https://github.com/elapuestojoe/Wakanda#readme",
+  "dependencies": {
+    "electron-window-state": "^5.0.3",
+    "python-shell": "^1.0.7"
+  },
+  "devDependencies": {
+    "electron": "^5.0.1",
+    "electron-reload": "^1.4.0"
+  }
+}
