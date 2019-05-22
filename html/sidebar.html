@@ -1,9 +1,26 @@
-<div class="pane-sm sidebar">
-    <div class="container" id="form-container">
-        <ul>
-            <li><button id="loadDataSection" class="btn btn-primary">Load Data</button></li>
-            <li><button id="visualizeSection" class="btn btn-primary">Visualize</button></li>
-            <li><button id="networkArchitectureSection" class="btn btn-primary">Design Network</button></li>
-        </ul>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+    <!-- Custom css -->
+
+    <link rel="stylesheet" href="../css/main.css">
+</head>
+
+<body>
+    <div class="sidenav">
+        <a id="loadDataSidenav" href="#loadData">Load Data</a>
+        <a id="visualizeSidenav" href="#visualize">Visualize</a>
+        <a id="designSidenav" href="#design">Design</a>
+        <a id="resultsNavBtn" href="#results">Results</a>
     </div>
-</div>
+
+    <script>
+        // You can also require other files to run in this process
+        require('../renderer.js')
+    </script>
+</body>
+
+</html>

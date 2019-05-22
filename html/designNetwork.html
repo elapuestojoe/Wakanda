@@ -1,7 +1,50 @@
-<div class="pane">
-    <h1>Side1</h1>
-</div>
+<!DOCTYPE html>
+<html>
 
-<div class="pane">
-    <h1>Side2</h1>
-</div>
+<head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+    <link rel="stylesheet" href="../css/dragDrop.css">
+</head>
+
+<body>
+    <h1>Design</h1>
+
+    <div class="container">
+        <div class="row">
+            <div class="column">
+                <ol id="designList" class="connected-sortable droppable-area1">
+                    <li class="draggable-item">Input Layer</li>
+                </ol>
+            </div>
+            <div class="column">
+                <ul class="designPanel" class="connected-sortable droppable-area1">
+                    <li>Dense <button type="button" id="dense">Add Dense</button></li>
+                    <li>GRU <button type="button" id="gru">Add GRU</button></li>
+                    <li>LSTM <button type="button" id="lstm">Add LSTM</button></li>
+                    <li><button id="generateCode" type="button">Generate Code</button></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.$ = window.jQuery = require('../jquery-3.4.1/jquery-3.4.1.js');
+        require('../renderers/designNetworkRenderer.js')
+        require('../jquery-ui-1.12.1/jquery-ui.min.js')
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(init);
+
+            function init() {
+                $(".droppable-area1, .droppable-area2").sortable({
+                    connectWith: ".connected-sortable",
+                    stack: '.connected-sortable ul'
+                }).disableSelection();
+            }
+        })
+    </script>
+</body>
+
+</html>

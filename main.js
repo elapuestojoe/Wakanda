@@ -1,107 +1,184 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, Menu, MenuItem, ipcMain } = require('electron')
+const { app, BrowserWindow, BrowserView, Menu, MenuItem, ipcMain, session } = require('electron')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 
 require('electron-reload')(__dirname);
 
-
 // Create app menu
 let mainMenu = new Menu.buildFromTemplate(require('./mainMenu.js'))
-// Save window state
+    // Save window state
 const windowStateKeeper = require('electron-window-state')
 
 let mainWindow
+let configureLayerWindow
+
+let dictWindows = {}
+global.sharedObj = { trainFilePath: null }
 
 function createWindow() {
-  // Create the browser window.
-  let winState = windowStateKeeper({
-    defaultWidth: 1200,
-    defaultHeight: 800
-  })
+    // Create the browser window.
+    let winState = windowStateKeeper({
+        defaultWidth: 1200,
+        defaultHeight: 800
+    })
 
-  mainWindow = new BrowserWindow({
-    width: winState.width,
-    height: winState.height,
-    x: winState.x,
-    y: winState.y,
-    minWidth: 600,
-    minHeight: 800,
-    backgroundColor: '#9E9E9E',
-    webPreferences: {
-      nodeIntegration: true
-    }
-  })
-  winState.manage(mainWindow)
+    mainWindow = new BrowserWindow({
+        width: winState.width,
+        height: winState.height,
+        x: winState.x,
+        y: winState.y,
+        minWidth: 800,
+        minHeight: 800,
+        backgroundColor: '#9E9E9E',
+        webPreferences: {
+            nodeIntegration: true
+        },
+        show: false
+    })
 
-  // and load the index.html of the app.
-  mainWindow.loadFile('html/index.html')
+    mainWindow.on('ready-to-show', () => {
+        mainWindow.show()
+    })
+    winState.manage(mainWindow)
 
-  // Send message to render
-  // mainWindow.webContents.on('did-finish-load', () => {
-  //   mainWindow.webContents.send('private', 'Message from Main process to MainWindow')
-  // })
-  // TODO: Learn modal windows
+    console.log("Session: " + session)
 
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+    // and load the index.html of the app.
+    mainWindow.loadFile('html/sideBar.html')
 
-  // Emitted when the window is closed.
-  mainWindow.on('closed', function () {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    mainWindow = null
-  })
+    dictWindows["html/loadData.html"] = new BrowserView({
+        webPreferences: {
+            nodeIntegration: true
+        }
+    })
+
+    dictWindows["html/loadData.html"].setBounds({ x: 160, y: 0, width: mainWindow.getBounds().width - 160 - 300, height: mainWindow.getBounds().height })
+    dictWindows["html/loadData.html"].setAutoResize({ width: true, height: true })
+    dictWindows["html/loadData.html"].webContents.loadFile('html/loadData.html')
+    mainWindow.setBrowserView(dictWindows["html/loadData.html"])
+    dictWindows["html/loadData.html"].webContents.openDevTools()
+        // Open the DevTools.
+        // mainWindow.webContents.openDevTools()
+
+    // Emitted when the window is closed.
+    mainWindow.on('closed', function() {
+        // Dereference the window object, usually you would store windows
+        // in an array if your app supports multi windows, this is the time
+        // when you should delete the corresponding element.
+        mainWindow = null
+    })
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
-  createWindow()
-  Menu.setApplicationMenu(mainMenu)
+    createWindow()
+    Menu.setApplicationMenu(mainMenu)
 })
 
 // Quit when all windows are closed.
-app.on('window-all-closed', function () {
-  // On macOS it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
+app.on('window-all-closed', function() {
+    // On macOS it is common for applications and their menu bar
+    // to stay active until the user quits explicitly with Cmd + Q
+    if (process.platform !== 'darwin') {
+        app.quit()
+    }
 })
 
-app.on('activate', function () {
-  // On macOS it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) {
-    createWindow()
-  }
+app.on('activate', function() {
+    // On macOS it's common to re-create a window in the app when the
+    // dock icon is clicked and there are no other windows open.
+    if (mainWindow === null) {
+        createWindow()
+    }
 })
 
-app.on('before-quit', function () {
-  // Called before quitting, it might be useful to save app current state
-  console.log("App is about to quit")
+app.on('before-quit', function() {
+    // Called before quitting, it might be useful to save app current state
+    console.log("App is about to quit")
 })
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
 // IPC management
-// ipcMain.on('channel1', (e, args) => {
-//   console.log(args)
-//   if(args === 'DesignNetwork') {
-//     mainWindow.loadFile('html/designNetwork.html')
-//   }
-// })
+ipcMain.on('updateWebView', (e, url) => {
+    console.log('updateWebView: ' + url)
+
+    if (dictWindows[url]) {
+        mainWindow.setBrowserView(dictWindows[url])
+    } else {
+        dictWindows[url] = new BrowserView({
+            webPreferences: {
+                nodeIntegration: true
+            }
+        })
+
+        dictWindows[url].setBounds({ x: 160, y: 0, width: mainWindow.getBounds().width - 160 - 300, height: mainWindow.getBounds().height })
+        dictWindows[url].setAutoResize({ width: true, height: true })
+        dictWindows[url].webContents.loadFile(url)
+        mainWindow.setBrowserView(dictWindows[url])
+        dictWindows[url].webContents.openDevTools()
+    }
+
+    if (url !== 'html/designNetwork' && configureLayerWindow) {
+        configureLayerWindow.close()
+    }
+})
+
+ipcMain.on('trainFilePath', (e, filePath) => {
+    console.log('trainFilePath', filePath)
+    global.sharedObj.trainFilePath = filePath
+
+    if (dictWindows['html/visualizeData.html']) {
+        dictWindows['html/visualizeData.html'].webContents.send('trainFilePath', { msg: filePath })
+    }
+})
+
+ipcMain.on('configureLayer', (event, response) => {
+    console.log("configureLayer")
+    dictWindows['html/designNetwork.html'].webContents.send('configureLayer', response)
+})
+
+ipcMain.on('additionalWindow', (event, args) => {
+    if (args[0] === 'configureLayer') {
+
+        if (configureLayerWindow) {
+            configureLayerWindow.close()
+        }
+        configureLayerWindow = new BrowserWindow({
+            width: 800,
+            height: 400,
+            modal: true,
+            parent: BrowserWindow.getFocusedWindow,
+            webPreferences: {
+                nodeIntegration: true,
+                additionalArguments: [args[1], args[2]]
+            },
+            show: false
+        })
+        configureLayerWindow.on('ready-to-show', () => {
+            configureLayerWindow.show()
+        })
+
+        configureLayerWindow.on('close', () => {
+            configureLayerWindow = null
+        })
+        configureLayerWindow.loadFile('html/configureLayer.html')
+        configureLayerWindow.webContents.openDevTools()
+
+
+    }
+})
 
 // Python code test
 let { PythonShell } = require('python-shell')
 
-PythonShell.run('hello.py', null, function (err, results) {
-  if (err) throw err;
-  console.log('finished')
-  console.log(results)
+PythonShell.run('hello.py', null, function(err, results) {
+    if (err) throw err;
+    console.log('finished')
+    console.log(results)
 });

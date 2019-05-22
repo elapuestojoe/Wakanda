@@ -3,48 +3,32 @@
 // All of the Node.js APIs are available in this process.
 
 const { ipcRenderer } = require('electron')
-var app = require('electron').remote
-var dialog = app.dialog
+const { app, dialog } = require('electron').remote
+const session = require('electron').remote.session;
+var csvHeaders = require('csv-headers');
 var fs = require('fs')
 
-// Send message to main process on channel1
-// ipcRenderer.send('channel1', 'Hello from renderer process')
-// ipcRenderer.on('channel1', (e, args) => {
-//   console.log(args)
-// })
-// ipcRenderer.on('private', (e, args) => {
-//   console.log(args)
-// })
-
-document.getElementById('openButton').onclick = () => {
-  dialog.showOpenDialog({
-    // Set custom filters
-    // properties: ['openFile'],
-    // filters: [{
-    //   name: 'Images',
-    //   extensions: ['jpg', 'jpeg', 'png']
-    // }]
-  }, (fileNames) => {
-    if (fileNames === undefined) {
-      alert("No file selected")
-    } else {
-      readFile(fileNames[0])
+session.defaultSession.cookies.get({ name: "trainFilePath" }, (error, cookies) => {
+    if (error) {
+        console.log("Error retrieving cookie")
+    } else if (cookies.length > 0) {
+        readFile(cookies[0].value)
+        console.log("Retrieved cookie with value" + cookies[0].value)
     }
-  })
+})
+
+document.getElementById('loadDataSidenav').onclick = () => {
+    ipcRenderer.send('updateWebView', 'html/loadData.html')
 }
 
-function readFile(filepath) {
-  fs.readFile(filepath, 'utf-8', (err, data) => {
-    if (err) {
-      alert('An error occured reading the file.')
-      return
-    }
-    var textArea = document.getElementById('output')
-    textArea.value = data
-  })
+document.getElementById('visualizeSidenav').onclick = () => {
+    ipcRenderer.send('updateWebView', 'html/visualizeData.html')
 }
 
-document.getElementById('visualizeSection').onclick = () => {
-  console.log("Visualize button clicked")
-  document.getElementById('mainContent').innerHTML = '<object type="text/html" data="designNetwork.html"></object>'
+document.getElementById('designSidenav').onclick = () => {
+    ipcRenderer.send('updateWebView', 'html/designNetwork.html')
+}
+
+document.getElementById('resultsNavBtn').onclick = () => {
+    ipcRenderer.send('updateWebView', 'html/results.html')
 }
