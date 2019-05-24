@@ -1,17 +1,19 @@
 var remote = require('electron').remote;
-const session = require('electron').remote.session;
+
 const { ipcRenderer } = require('electron')
 
-function handleTrainFilePath() {
-    let trainFilePath = remote.getGlobal('sharedObj').trainFilePath
+let trainFilePath
 
-    console.log("VIZ")
-    console.log(trainFilePath)
+function handleTrainFilePath() {
+    trainFilePath = remote.getGlobal('sharedObj').trainFilePath
+
+    if (trainFilePath) {
+        document.getElementById('loadedFileTextArea').innerHTML = "Loaded file: " + trainFilePath
+    }
 }
 
 handleTrainFilePath()
 
-ipcRenderer.on('trainFilePath', (event, data) => {
-    console.log("UPDATED")
-    console.log(data.msg)
+ipcRenderer.on('will-show', (event, message) => {
+    handleTrainFilePath()
 })

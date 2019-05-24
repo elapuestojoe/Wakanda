@@ -15,7 +15,14 @@ let mainWindow
 let configureLayerWindow
 
 let dictWindows = {}
-global.sharedObj = { trainFilePath: null }
+global.sharedObj = {
+    trainFilePath: null,
+    predictiveVariableList: new Set(),
+    targetVariableList: new Set()
+}
+
+global.sharedObj.predictiveVariableList.add(5)
+let currentURL
 
 function createWindow() {
     // Create the browser window.
@@ -59,6 +66,8 @@ function createWindow() {
     dictWindows["html/loadData.html"].webContents.loadFile('html/loadData.html')
     mainWindow.setBrowserView(dictWindows["html/loadData.html"])
     dictWindows["html/loadData.html"].webContents.openDevTools()
+
+    currentURL = "html/loadData.html"
         // Open the DevTools.
         // mainWindow.webContents.openDevTools()
 
@@ -106,10 +115,19 @@ app.on('before-quit', function() {
 
 // IPC management
 ipcMain.on('updateWebView', (e, url) => {
-    console.log('updateWebView: ' + url)
+
+
+    if (url === currentURL) {
+        return
+    }
+    currentURL = url
 
     if (dictWindows[url]) {
+
         mainWindow.setBrowserView(dictWindows[url])
+
+        dictWindows[url].webContents.send('will-show', url)
+
     } else {
         dictWindows[url] = new BrowserView({
             webPreferences: {
@@ -124,17 +142,8 @@ ipcMain.on('updateWebView', (e, url) => {
         dictWindows[url].webContents.openDevTools()
     }
 
-    if (url !== 'html/designNetwork' && configureLayerWindow) {
+    if (url !== 'html/designNetwork.html' && configureLayerWindow) {
         configureLayerWindow.close()
-    }
-})
-
-ipcMain.on('trainFilePath', (e, filePath) => {
-    console.log('trainFilePath', filePath)
-    global.sharedObj.trainFilePath = filePath
-
-    if (dictWindows['html/visualizeData.html']) {
-        dictWindows['html/visualizeData.html'].webContents.send('trainFilePath', { msg: filePath })
     }
 })
 
