@@ -95,15 +95,16 @@ function scanAndValidateLayers() {
     validatedLayers = getValidLayers(networkJSON, getGlobal('sharedObj').targetVariableList.size)
     colorValidatedLayers(validatedLayers)
 
-    console.log("VAL")
-    console.log(validatedLayers.validLayers.length)
-    console.log(validatedLayers.invalidLayers.length)
-
     if ((validatedLayers.validLayers.length != 0 && validatedLayers.invalidLayers.length == 0)) {
-        document.getElementById('testModelBtn').disabled = false
+
+        ipcRenderer.send('scanAndValidateLayers', true);
+        document.getElementById('testModelBtn').disabled = false;
         transformToCode()
     } else {
-        document.getElementById('testModelBtn').disabled = true
+        ipcRenderer.send('scanAndValidateLayers', false);
+        document.getElementById('testModelBtn').disabled = true;
+        getGlobal('sharedObj').modelHTML = null;
+        model = null;
     }
 
 }
@@ -113,9 +114,10 @@ function transformToCode() {
     let designList = document.getElementById('designList').innerHTML
     let networkJSON = htmlToNetworkJSON(designList)
 
-    model = buildNetwork(networkJSON, getGlobal('sharedObj').predictiveVariableList.size)
+    model = buildNetwork(networkJSON, [getGlobal('sharedObj').predictiveVariableList.size]) //Null is the undetermined batch size, the other is the input variables
 
-    getGlobal('sharedObj').model = model
+    getGlobal('sharedObj').modelHTML = designList;
+    // console.log(model)
 }
 
 document.getElementById('generateCode').onclick = () => transformToCode()
@@ -126,7 +128,7 @@ function testModel() {
 
     if (model) {
         model.fit(xs, ys, {
-            epochs: 100,
+            epochs: 10,
             callbacks: {
                 onEpochEnd: (epoch, log) => console.log(`Epoch ${epoch}: loss = ${log.loss}`)
             }
@@ -134,7 +136,7 @@ function testModel() {
     }
 }
 
-document.getElementById('testModelBtn').onclick = () => testModel()
+document.getElementById('testModelBtn').onclick = () => testModel();
 
 ipcRenderer.on('configureLayer', (event, response) => {
     console.log("configureLayer:")
@@ -154,6 +156,10 @@ ipcRenderer.on('configureLayer', (event, response) => {
 ipcRenderer.on('will-show', (event, message) => {
     console.log("will-show: ", message)
     scanAndValidateLayers()
+});
+
+ipcRenderer.on('inputDataChanged', (event, flag) => {
+    scanAndValidateLayers();
 })
 
 $(document).ready(function() {

@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, BrowserView, Menu, MenuItem, ipcMain, session } = require('electron')
+const { app, BrowserWindow, BrowserView, Menu, MenuItem, ipcMain } = require('electron')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -18,10 +18,12 @@ let dictWindows = {}
 global.sharedObj = {
     trainFilePath: null,
     predictiveVariableList: new Set(),
-    targetVariableList: new Set()
+    targetVariableList: new Set(),
+    orderedHeaders: [],
+    modelHTML: null,
+    scanAndValidateLayers: false
 }
 
-global.sharedObj.predictiveVariableList.add(5)
 let currentURL
 
 function createWindow() {
@@ -49,8 +51,6 @@ function createWindow() {
         mainWindow.show()
     })
     winState.manage(mainWindow)
-
-    console.log("Session: " + session)
 
     // and load the index.html of the app.
     mainWindow.loadFile('html/sideBar.html')
@@ -114,8 +114,23 @@ app.on('before-quit', function() {
 // code. You can also put them in separate files and require them here.
 
 // IPC management
-ipcMain.on('updateWebView', (e, url) => {
 
+ipcMain.on('inputDataChanged', (event, flag) => {
+    if (dictWindows['html/designNetwork.html']) {
+        dictWindows['html/designNetwork.html'].webContents.send('inputDataChanged', flag);
+    }
+});
+
+ipcMain.on('inputDataLoaded', (event, flag) => {
+    mainWindow.webContents.send('inputDataLoaded', flag);
+});
+
+ipcMain.on('scanAndValidateLayers', (event, flag) => {
+    global.sharedObj.scanAndValidateLayers = flag;
+    mainWindow.webContents.send('scanAndValidateLayers', flag);
+});
+
+ipcMain.on('updateWebView', (e, url) => {
 
     if (url === currentURL) {
         return
@@ -182,12 +197,3 @@ ipcMain.on('additionalWindow', (event, args) => {
 
     }
 })
-
-// Python code test
-let { PythonShell } = require('python-shell')
-
-PythonShell.run('hello.py', null, function(err, results) {
-    if (err) throw err;
-    console.log('finished')
-    console.log(results)
-});

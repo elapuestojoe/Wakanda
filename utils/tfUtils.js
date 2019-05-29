@@ -1,15 +1,32 @@
 const tf = require('@tensorflow/tfjs');
 
-function getLayer(layerJSON, input_shape) {
+function getLayer(layerJSON) {
 
     let layer;
     switch (layerJSON.type) {
 
         case 'Dense':
-            console.log("Adding Dense layer")
+            console.log("Adding Dense layer");
             layer = tf.layers.dense({
                 units: parseInt(layerJSON.units, 10),
-                activation: 'relu'
+                activation: layerJSON.activation
+            })
+            break;
+
+        case 'GRU':
+            console.log("Adding GRU layer");
+            layer = tf.layers.gru({
+                units: parseInt(layerJSON.units, 10),
+                activation: layerJSON.activation,
+                returnSequences: false
+            })
+            break;
+
+        case 'LSTM':
+            console.log("Adding LTM layer");
+            layer = tf.layers.lstm({
+                units: parseInt(layerJSON.units, 10),
+                activation: layerJSON.activation
             })
             break;
 
@@ -22,25 +39,29 @@ function getLayer(layerJSON, input_shape) {
 
 function buildNetwork(networkJSON, input_shape) {
 
-    console.log(networkJSON)
     const model = tf.sequential();
-    model.add(tf.layers.inputLayer({ inputShape: [input_shape] }))
+    model.add(tf.layers.inputLayer({ inputShape: input_shape }))
+
 
     for (layerIndex in networkJSON) {
 
-        let layerJSON = networkJSON[layerIndex]
+        let layerJSON = networkJSON[layerIndex];
+        let layer = getLayer(layerJSON);
 
-        if (layerIndex == 0) {
-            model.add(getLayer(layerJSON))
-        } else {
-            model.add(getLayer(layerJSON))
+        //TODO: Handle GRU to 2-d output
+        if ((layerJSON.type == "GRU" || layerJSON.type == "LSTM")) {
+            console.log("ADDING RESHAPE")
+            let outputShape = model.layers[model.layers.length - 1].outputShape
+            model.add(tf.layers.reshape({ targetShape: [outputShape] }));
+            // model.add(tf.layers.repeatVector({ n: 1 }));
         }
 
+        model.add(layer);
     }
     model.compile({ optimizer: 'sgd', loss: 'meanSquaredError' });
-    return model
+    return model;
 }
 
 module.exports = {
     buildNetwork: buildNetwork
-}
+};

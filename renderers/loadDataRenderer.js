@@ -39,6 +39,9 @@ function processFirstLine(filepath) {
 function clearHeaders() {
     var ul = document.getElementById("targetVariableList");
     while (ul.firstChild) ul.removeChild(ul.firstChild);
+
+    var ul = document.getElementById('predictiveVariableList');
+    while (ul.firstChild) ul.removeChild(ul.firstChild);
 }
 
 function addHeaders(headers, targetId, lastChecked) {
@@ -87,10 +90,14 @@ function setConstraintOneCheckBoxSelected(className, message) {
         } else {
             remote.getGlobal('sharedObj')[correspondingList].delete(key)
         }
+
+        ipcRenderer.send('inputDataChanged', true);
     })
 }
 
 function processHeaders(headers) {
+
+    remote.getGlobal('sharedObj').orderedHeaders = headers
 
     addHeaders(headers, 'predictiveVariableList', false)
     addHeaders(headers, 'targetVariableList', true)
@@ -111,11 +118,11 @@ function processHeaders(headers) {
 document.getElementById('openButton').onclick = () => {
     dialog.showOpenDialog({
         // Set custom filters
-        // properties: ['openFile'],
-        // filters: [{
-        //   name: 'Images',
-        //   extensions: ['jpg', 'jpeg', 'png']
-        // }]
+        properties: ['openFile'],
+        filters: [{
+            name: 'CSV files',
+            extensions: ['csv']
+        }]
     }, (fileNames) => {
         if (fileNames === undefined) {
             alert("No file selected")
@@ -123,9 +130,10 @@ document.getElementById('openButton').onclick = () => {
             trainFilePath = fileNames[0]
             readFile(trainFilePath)
             processFirstLine(trainFilePath)
-                // Send to main so it can set it up as global variable
-                // ipcRenderer.send('trainFilePath', fileNames[0])
+
             remote.getGlobal('sharedObj').trainFilePath = trainFilePath
+
+            ipcRenderer.send('inputDataLoaded', true);
         }
     })
 }

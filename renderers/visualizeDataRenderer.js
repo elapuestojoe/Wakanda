@@ -15,5 +15,6 @@ function handleTrainFilePath() {
 handleTrainFilePath()
 
 ipcRenderer.on('will-show', (event, message) => {
+    console.log("will-show")
     handleTrainFilePath()
 })

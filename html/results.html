@@ -4,10 +4,33 @@
 <head>
     <meta charset="UTF-8">
     <title>Hello World!</title>
+    <link rel="stylesheet" href="../css/main.css">
 </head>
 
 <body>
-    <h1>Results</h1>
+    <h1>Train</h1>
+
+    <p id="statusText"></p>
+    <p id="loadedDataText">You haven't loaded data!<br></p>
+    <p id="networkDesignedText">You haven't designed your network!<br></p>
+
+    <div id="requirementsFulfilled">
+
+        <input type="checkbox" name="splitTrainFile" value="splitTrainFile" id="splitTrainFile"> Split train file<br>
+        <div id="splitTrainRequirements" class='hidden'>
+            <form id="trainForm">
+                Train: <input type="number" min="0" max="100" id="trainSplit" value="80"> Test: <input type="number" min="0" max="100" id="testSplit" value="20"><br>
+                <button type="submit" form="trainForm" value="Submit" id="trainFormSubmitBtn">Test model with train-test split</button><br>
+            </form>
+
+        </div>
+
+        <input type="checkbox" name="supplyTestFile" value="supplyTestFile" id="supplyTestFile"> Supply test file<br>
+        <div id="supplyTestFileRequirements" class='hidden'>
+            <p id="supplyTestFileText">Test filepath: </p> <button id="supplyTestFileButton" type="button">Load test file</button> <br><br>
+        </div>
+    </div>
+
 </body>
 <script>
     // You can also require other files to run in this process
