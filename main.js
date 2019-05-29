@@ -1,6 +1,8 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, BrowserView, Menu, MenuItem, ipcMain } = require('electron')
-
+const { app, BrowserWindow, BrowserView, Menu, MenuItem, ipcMain } = require('electron');
+const url = require('url')
+const path = require('path')
+global.__basedir = __dirname;
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 
@@ -22,16 +24,16 @@ global.sharedObj = {
     orderedHeaders: [],
     modelHTML: null,
     scanAndValidateLayers: false
-}
+};
 
-let currentURL
+let currentURL;
 
 function createWindow() {
     // Create the browser window.
     let winState = windowStateKeeper({
         defaultWidth: 1200,
         defaultHeight: 800
-    })
+    });
 
     mainWindow = new BrowserWindow({
         width: winState.width,
@@ -40,36 +42,43 @@ function createWindow() {
         y: winState.y,
         minWidth: 800,
         minHeight: 800,
-        backgroundColor: '#9E9E9E',
+        // backgroundColor: '#9E9E9E',
         webPreferences: {
             nodeIntegration: true
         },
         show: false
-    })
+    });
 
     mainWindow.on('ready-to-show', () => {
-        mainWindow.show()
-    })
-    winState.manage(mainWindow)
+        mainWindow.show();
+    });
+    winState.manage(mainWindow);
 
     // and load the index.html of the app.
-    mainWindow.loadFile('html/sideBar.html')
+    // mainWindow.loadFile('html/sideBar.html');
+    // mainWindow.loadFile('html/mainWindow.html');
+    mainWindow.loadURL(url.format({
+        pathname: path.join(__dirname, 'html/mainWindow.html'),
+        protocol: 'file:',
+        slashes: true
+    }))
+    mainWindow.webContents.openDevTools(true);
 
-    dictWindows["html/loadData.html"] = new BrowserView({
-        webPreferences: {
-            nodeIntegration: true
-        }
-    })
+    // dictWindows["html/loadData.html"] = new BrowserView({
+    //     webPreferences: {
+    //         nodeIntegration: true
+    //     }
+    // });
 
-    dictWindows["html/loadData.html"].setBounds({ x: 160, y: 0, width: mainWindow.getBounds().width - 160 - 300, height: mainWindow.getBounds().height })
-    dictWindows["html/loadData.html"].setAutoResize({ width: true, height: true })
-    dictWindows["html/loadData.html"].webContents.loadFile('html/loadData.html')
-    mainWindow.setBrowserView(dictWindows["html/loadData.html"])
-    dictWindows["html/loadData.html"].webContents.openDevTools()
+    // dictWindows["html/loadData.html"].setBounds({ x: 160, y: 0, width: mainWindow.getBounds().width - 160 - 300, height: mainWindow.getBounds().height })
+    // dictWindows["html/loadData.html"].setAutoResize({ width: true, height: true })
+    // dictWindows["html/loadData.html"].webContents.loadFile('html/loadData.html')
+    // mainWindow.setBrowserView(dictWindows["html/loadData.html"])
+    // dictWindows["html/loadData.html"].webContents.openDevTools()
 
-    currentURL = "html/loadData.html"
-        // Open the DevTools.
-        // mainWindow.webContents.openDevTools()
+    // currentURL = "html/loadData.html"
+    // Open the DevTools.
+    // mainWindow.webContents.openDevTools()
 
     // Emitted when the window is closed.
     mainWindow.on('closed', function() {

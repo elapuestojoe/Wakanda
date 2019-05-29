@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Wakanda</title>
+    <!-- <link rel="stylesheet" href="../css/main_test.css"> -->
+</head>
+
+<body>
+    <script>
+        console.log("Hello World");
+
+        onload = () => {
+            let webview = document.getElementById('webview')
+
+            webview.reload()
+        }
+    </script>
+    <webview id='webview' src="http://www.baidu.com/" autosize="on" minwidth="576" minheight="432"></webview>
+</body>
+
+</html>
