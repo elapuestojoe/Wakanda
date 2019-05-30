@@ -139,41 +139,18 @@ ipcMain.on('scanAndValidateLayers', (event, flag) => {
     mainWindow.webContents.send('scanAndValidateLayers', flag);
 });
 
-ipcMain.on('updateWebView', (e, url) => {
+ipcMain.on('updateWebView', (e, flag) => {
 
-    if (url === currentURL) {
-        return
-    }
-    currentURL = url
-
-    if (dictWindows[url]) {
-
-        mainWindow.setBrowserView(dictWindows[url])
-
-        dictWindows[url].webContents.send('will-show', url)
-
-    } else {
-        dictWindows[url] = new BrowserView({
-            webPreferences: {
-                nodeIntegration: true
-            }
-        })
-
-        dictWindows[url].setBounds({ x: 160, y: 0, width: mainWindow.getBounds().width - 160 - 300, height: mainWindow.getBounds().height })
-        dictWindows[url].setAutoResize({ width: true, height: true })
-        dictWindows[url].webContents.loadFile(url)
-        mainWindow.setBrowserView(dictWindows[url])
-        dictWindows[url].webContents.openDevTools()
-    }
-
-    if (url !== 'html/designNetwork.html' && configureLayerWindow) {
+    if (configureLayerWindow) {
         configureLayerWindow.close()
     }
+
+    mainWindow.webContents.send('will-show', flag);
 });
 
 ipcMain.on('configureLayer', (event, response) => {
     console.log("configureLayer")
-    dictWindows['html/designNetwork.html'].webContents.send('configureLayer', response)
+    mainWindow.webContents.send('configureLayer', response)
 });
 
 ipcMain.on('additionalWindow', (event, args) => {

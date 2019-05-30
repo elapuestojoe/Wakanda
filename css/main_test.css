@@ -48,3 +48,19 @@ body {
     padding-top: 20px;
     padding-left: 20px;
 }
+
+.red {
+    color: red;
+}
+
+.green {
+    color: green;
+}
+
+.hidden {
+    display: none;
+}
+
+.show {
+    display: inline;
+}

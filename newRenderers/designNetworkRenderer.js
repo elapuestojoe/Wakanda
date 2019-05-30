@@ -68,20 +68,17 @@ function colorValidatedLayers(layers) {
 
         let htmlLayer = document.getElementById(layer.id)
 
-        htmlLayer.classList.remove("red")
-        htmlLayer.classList.add("green")
-
         document.getElementById('discardReasons-' + layer.id).innerHTML = ""
+        document.getElementById('discardReasons-' + layer.id).setAttribute('class', 'green')
     }
 
     for (layerIndex in layers.invalidLayers) {
         let layer = layers.invalidLayers[layerIndex]
 
         let htmlLayer = document.getElementById(layer.id)
-        htmlLayer.classList.remove("green")
-        htmlLayer.classList.add("red")
 
         document.getElementById('discardReasons-' + layer.id).innerHTML = layer.discardReasons
+        document.getElementById('discardReasons-' + layer.id).setAttribute('class', 'red')
     }
 }
 
