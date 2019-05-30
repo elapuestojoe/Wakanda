@@ -5,20 +5,71 @@
 <head>
     <meta charset="UTF-8">
     <title>Wakanda</title>
-    <!-- <link rel="stylesheet" href="../css/main_test.css"> -->
+    <link rel="stylesheet" href="../bootstrap-4.3.1-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/main_test.css">
 </head>
 
 <body>
+
+    <div class="sidenav">
+
+
+        <!-- <h1>Sidebar</h1> -->
+        <a href="#loadData" class="sidenavBtn active">Load Data</a>
+        <a href="#designNetwork" class="sidenavBtn">Design Network</a>
+        <a href="#trainNetwork" class="sidenavBtn">Train Network</a>
+        <!-- </nav> -->
+    </div>
+
+
+
+    <div id="designNetwork" class="page">
+        <h1>Design network</h1>
+        <div class="row">
+            <div class="col-sm-8">
+                <h3>Network architecture</h3>
+                <ol id="designList" class="connected-sortable droppable-area1">
+                </ol>
+            </div>
+
+            <div class="col-sm-4">
+                <h3>Layers</h3>
+                <ul class="designPanel" class="connected-sortable droppable-area1">
+                    <li>Dense <button type="button" id="dense">Add Dense</button></li>
+                    <li>GRU <button type="button" id="gru">Add GRU</button></li>
+                    <li>LSTM <button type="button" id="lstm">Add LSTM</button></li>
+                    <li><button id="generateCode" type="button">Generate Code</button></li>
+                    <li><button id="testModelBtn" type="button" disabled>Train model</button></li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="trainNetwork" class="page">
+        <h1>Train network</h1>
+    </div>
+
+
+    <!-- By default the first page must be last  -->
+    <div id="loadData" class="page default">
+        <h1>Load data</h1>
+        <p class="text-info" id="loadedFileTextArea">Load file: </p><br>
+        <button id="openTrainFileButton" class="btn btn-dark">Open Train File</button><br>
+        <p>Predictive variable(s)</p>
+        <ul id="predictiveVariableList">
+        </ul>
+
+        <p>Target variable(s)</p>
+        <ul id="targetVariableList">
+        </ul>
+    </div>
+
     <script>
-        console.log("Hello World");
-
-        onload = () => {
-            let webview = document.getElementById('webview')
-
-            webview.reload()
-        }
+        require('../newRenderers/sidenav.js');
+        require('../newRenderers/loadDataRenderer.js');
+        require('../newRenderers/designNetworkRenderer.js');
     </script>
-    <webview id='webview' src="http://www.baidu.com/" autosize="on" minwidth="576" minheight="432"></webview>
 </body>
 
 </html>

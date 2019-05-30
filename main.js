@@ -169,12 +169,12 @@ ipcMain.on('updateWebView', (e, url) => {
     if (url !== 'html/designNetwork.html' && configureLayerWindow) {
         configureLayerWindow.close()
     }
-})
+});
 
 ipcMain.on('configureLayer', (event, response) => {
     console.log("configureLayer")
     dictWindows['html/designNetwork.html'].webContents.send('configureLayer', response)
-})
+});
 
 ipcMain.on('additionalWindow', (event, args) => {
     if (args[0] === 'configureLayer') {
@@ -202,7 +202,5 @@ ipcMain.on('additionalWindow', (event, args) => {
         })
         configureLayerWindow.loadFile('html/configureLayer.html')
         configureLayerWindow.webContents.openDevTools()
-
-
     }
-})
+});
