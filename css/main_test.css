@@ -1,11 +1,11 @@
 body {
-    padding-left: 160px;
+    padding-left: 200px;
     overflow-x: hidden;
 }
 
 .sidenav {
     height: 100%;
-    width: 160px;
+    width: 200px;
     position: fixed;
     z-index: 1;
     top: 0;
@@ -55,6 +55,10 @@ body {
 
 .green {
     color: green;
+}
+
+.validateIcon {
+    display: inline;
 }
 
 .hidden {

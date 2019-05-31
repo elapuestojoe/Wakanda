@@ -115,6 +115,8 @@ function processHeaders(headers) {
 
     setConstraintOneCheckBoxSelected('predictiveVariableList', 'You must have at least one predictive variable!')
     setConstraintOneCheckBoxSelected('targetVariableList', 'You must have at least one target variable!')
+
+    ipcRenderer.send('inputDataLoaded', true);
 }
 
 document.getElementById('openTrainFileButton').onclick = () => {
@@ -135,7 +137,6 @@ document.getElementById('openTrainFileButton').onclick = () => {
 
             remote.getGlobal('sharedObj').trainFilePath = trainFilePath
 
-            ipcRenderer.send('inputDataLoaded', true);
         }
     })
 }

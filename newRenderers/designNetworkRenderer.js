@@ -152,12 +152,16 @@ ipcRenderer.on('configureLayer', (event, response) => {
 // Called when the window will show so it can revalidate the layers
 ipcRenderer.on('will-show', (event, message) => {
     console.log("will-show: ", message)
-    scanAndValidateLayers()
+    scanAndValidateLayers();
 });
 
 ipcRenderer.on('inputDataChanged', (event, flag) => {
     scanAndValidateLayers();
-})
+});
+
+ipcRenderer.on('inputDataLoaded', (event, flag) => {
+    scanAndValidateLayers();
+});
 
 $(document).ready(function() {
     $(init);

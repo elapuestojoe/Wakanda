@@ -125,9 +125,7 @@ app.on('before-quit', function() {
 // IPC management
 
 ipcMain.on('inputDataChanged', (event, flag) => {
-    if (dictWindows['html/designNetwork.html']) {
-        dictWindows['html/designNetwork.html'].webContents.send('inputDataChanged', flag);
-    }
+    mainWindow.webContents.send('inputDataChanged', flag);
 });
 
 ipcMain.on('inputDataLoaded', (event, flag) => {

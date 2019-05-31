@@ -51,9 +51,12 @@ function buildNetwork(networkJSON, input_shape) {
         //TODO: Handle GRU to 2-d output
         if ((layerJSON.type == "GRU" || layerJSON.type == "LSTM")) {
             console.log("ADDING RESHAPE")
-            let outputShape = model.layers[model.layers.length - 1].outputShape
-            model.add(tf.layers.reshape({ targetShape: [outputShape] }));
-            // model.add(tf.layers.repeatVector({ n: 1 }));
+            let outputShape = model.layers[model.layers.length - 1].outputShape.slice(0);
+            // outputShape.push(1);
+            // outputShape.push(1);
+            // console.log(outputShape);
+            // model.add(tf.layers.reshape({ targetShape: [outputShape] }));
+            model.add(tf.layers.repeatVector({ n: 1 }));
         }
 
         model.add(layer);

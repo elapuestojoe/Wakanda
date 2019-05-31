@@ -15,8 +15,18 @@
 
 
         <!-- <h1>Sidebar</h1> -->
-        <a href="#loadData" class="sidenavBtn active">Load Data</a>
-        <a href="#designNetwork" class="sidenavBtn">Design Network</a>
+        <a href="#loadData" class="sidenavBtn active">
+            Load Data
+            <div id="loadDataSidenavIcon" class="validateIcon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x-circle"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+            </div>
+        </a>
+        <a href="#designNetwork" class="sidenavBtn">
+            Design Network
+            <div id="designSidenavIcon" class="validateIcon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x-circle"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+            </div>
+        </a>
         <a href="#trainNetwork" class="sidenavBtn">Train Network</a>
         <!-- </nav> -->
     </div>
@@ -36,6 +46,7 @@
                 <h3>Layers</h3>
                 <ul class="designPanel" class="connected-sortable droppable-area1">
                     <li>Dense <button type="button" id="dense">Add Dense</button></li>
+                    <li>Dropout <button type="button" id="dropout">Add Droput</button></li>
                     <li>GRU <button type="button" id="gru">Add GRU</button></li>
                     <li>LSTM <button type="button" id="lstm">Add LSTM</button></li>
                     <li><button id="generateCode" type="button">Generate Code</button></li>
