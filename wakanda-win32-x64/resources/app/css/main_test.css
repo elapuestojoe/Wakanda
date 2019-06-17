@@ -1,0 +1,70 @@
+body {
+    padding-left: 200px;
+    overflow-x: hidden;
+}
+
+.sidenav {
+    height: 100%;
+    width: 200px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    padding-top: 20px;
+}
+
+.sidenav a {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #818181;
+    display: block;
+}
+
+.sidenav a:hover {
+    color: #f1f1f1;
+}
+
+.sidenav a.active {
+    color: #add8e6;
+}
+
+
+/* This hides all pages */
+
+.page,
+ :target~.default {
+    display: none;
+}
+
+.default,
+ :target {
+    display: block;
+}
+
+.page {
+    padding-top: 20px;
+    padding-left: 20px;
+}
+
+.red {
+    color: red;
+}
+
+.green {
+    color: green;
+}
+
+.validateIcon {
+    display: inline;
+}
+
+.hidden {
+    display: none;
+}
+
+.show {
+    display: inline;
+}

@@ -46,7 +46,8 @@ function createWindow() {
         webPreferences: {
             nodeIntegration: true
         },
-        show: false
+        show: false,
+        icon: path.join(__dirname, 'img/icons/png/64x64.png')
     });
 
     mainWindow.on('ready-to-show', () => {

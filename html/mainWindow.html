@@ -35,25 +35,24 @@
 
     <div id="designNetwork" class="page">
         <h1>Design network</h1>
-        <div class="row">
+        <div class="row inheritHeight">
             <div class="col-sm-8">
                 <h3>Network architecture</h3>
                 <ol id="designList" class="connected-sortable droppable-area1">
                 </ol>
             </div>
 
-            <div class="col-sm-4">
+            <div class="pageFrame col-sm-4">
                 <h3>Layers</h3>
-                <ul class="designPanel" class="connected-sortable droppable-area1">
-                    <li>Dense <button type="button" id="dense">Add Dense</button></li>
-                    <li>Dropout <button type="button" id="dropout">Add Droput</button></li>
-                    <li>GRU <button type="button" id="gru">Add GRU</button></li>
-                    <li>LSTM <button type="button" id="lstm">Add LSTM</button></li>
+                <ul class="designPanel connected-sortable droppable-area1">
+                    <li>Dense <button type="button" class="btn btn-dark btn-block" id="dense">Add Dense</button></li>
+                    <li>Dropout <button type="button" class="btn btn-dark btn-block" id="dropout">Add Droput</button></li>
+                    <li>GRU <button type="button" class="btn btn-dark btn-block" id="gru">Add GRU</button></li>
+                    <li>LSTM <button type="button" class="btn btn-dark btn-block" id="lstm">Add LSTM</button></li>
                     <li><button id="generateCode" type="button">Generate Code</button></li>
                     <li><button id="testModelBtn" type="button" disabled>Train model</button></li>
                 </ul>
             </div>
-
         </div>
     </div>
 
@@ -69,7 +68,7 @@
             <div id="splitTrainRequirements" class='hidden'>
                 <form id="trainForm">
                     Train: <input type="number" min="0" max="100" id="trainSplit" value="80"> Test: <input type="number" min="0" max="100" id="testSplit" value="20"><br>
-                    <button type="submit" form="trainForm" value="Submit" id="trainFormSubmitBtn">Test model with train-test split</button><br>
+                    <button type="submit" form="trainForm" value="Submit" id="trainFormSubmitBtn" class="btn">Test model with train-test split</button><br>
                 </form>
 
             </div>
